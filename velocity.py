@@ -50,6 +50,7 @@ class Velocity():
         new_rad  = ( delta + norm_vec_rad + math.pi ) % ( 2 * math.pi )
         self.rad = new_rad 
         #print('反射后的速度角度为:{}°'.format(math.degrees(new_rad)))
+        self.velocity_loss(1)
         
         
     def velocity_decompose(self):
@@ -62,6 +63,10 @@ class Velocity():
     def velocity_loss(self,ratio):
         ''' 该函数将会根据传入的比例对速度进行衰减 '''
         self.amp *= ratio
+        
+    def velocity_add(self,amp):
+        ''' ''' 
+        self.amp += amp
     
     def velocity_map(self,rad):
         ''' 该函数将速度值映射到rad方向，其余方向分量清0 '''
