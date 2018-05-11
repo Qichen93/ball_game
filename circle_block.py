@@ -1,5 +1,6 @@
 import math
 import pygame
+import time
 from block import Block
 class Circle_block(Block):
     def __init__(self,screen,pos,size,num,color=(0,0,0)):
@@ -21,7 +22,7 @@ class Circle_block(Block):
         # 绘制num数到圆形上
         self.draw_num()    
     
-    def intersect_point_get(self,rad,pos):
+    def intersect_point_get(self,rad,pos,show_intersect_point= False):
         '''
             用于检测碰撞点
             圆方程     ：(x-a)^2 +(y-b)^2 = r^2
@@ -31,6 +32,12 @@ class Circle_block(Block):
             3. (k^2+1)*x^2+(2kd-2a)*x +(a^2 + (c-b)^2 - r^2) = 0 
             4. c1*x^2 + c2*x + c3 = 0  
                c1 = (k^2+1) ; c2 = (2kd-2a) ; c3 = (a^2+(c-b)^2-r^2)
+            ----------------------------------------------------------
+            2018-5-11 : 修复上一版本坐标计算错误，上一版本x与对应的y值
+                        组合错误。
+                        添加参数show_intersect_point,设置为True后可以观
+                        看每次碰撞时的小球，圆形与入射曲线细节图，每幅
+                        图持续时间1s。
         '''
         a = self.centerx
         b = self.centery
@@ -67,15 +74,24 @@ class Circle_block(Block):
         #print('直线与圆形交点为{}',point_list)
         
         # 根据pos与四个点的距离来判断，将最近的点作为碰撞点
-        point_list=[(x1,y2_1),(x1,y2_2),(x2,y1_2),(x2,y1_1)]
+        point_list=[(x1,y1_1),(x1,y1_2),(x2,y2_2),(x2,y2_1)]
         point_list.sort(key=lambda p:(math.hypot((p[0]-pos[0]),(p[1]-pos[1]))))
         
+        if show_intersect_point :
+            for p in point_list :
+                pygame.draw.circle(self.screen,[x^((1<<8)-1) for x in self.color],[int(x) for x in p],10,0)
+                pygame.draw.circle(self.screen,self.color,self.pos,self.radius,1)
+                pygame.draw.line(self.screen,self.color, pos, (pos[0]+math.cos(rad)*100,pos[1]+math.sin(rad)*100), 3)
+                pygame.display.flip()
+            time.sleep(1)
         # 若x_v>0小球入射由左至右，选择左侧交点，反之右侧
-        #intersect_point = point_list[0] if math.cos(rad) >= 0 else point_list[-1] 
-        intersect_point=point_list[0]
+
+        intersect_point=list(point_list[0])
         # 由交点与圆心计算法线角度
         norm_rad = math.atan((self.centery-intersect_point[1])/(self.centerx-intersect_point[0]))
-
+        # 将交点沿反速度方向再移动半径长度，防止反射时误触发多次反射
+        intersect_point[0]=intersect_point[0]-math.cos(rad)*self.radius
+        intersect_point[1]=intersect_point[1]-math.sin(rad)*self.radius
         return (intersect_point[0],intersect_point[1],norm_rad)
         #return intersect_point
         

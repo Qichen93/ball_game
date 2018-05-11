@@ -8,6 +8,8 @@ class Block():
         self.size   = size 
         self.num    = num
         self.color  = color
+        self.str_color = [x^((1<<8)-1) for x in color]
+        print(self.str_color)
         # 配置一些与该形状相关的参数
         self.param_init()
         #self.draw_block()
@@ -38,7 +40,7 @@ class Block():
         str_y_pixel = str_size                # 求出字符串像素高
         (str_pos_x,str_pos_y) = (self.centerx-str_x_pixel/2,self.centery-str_y_pixel/2)
         my_font = pygame.font.SysFont('arial',str_size)
-        self.screen.blit(my_font.render(str(self.num), True, (255,255,255)), (str_pos_x, str_pos_y))
+        self.screen.blit(my_font.render(str(self.num), True, self.str_color), (str_pos_x, str_pos_y))
     
     def intersect_point_get(self,rad,pos):
         '''

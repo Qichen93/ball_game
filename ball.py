@@ -6,7 +6,7 @@ class Ball(Velocity):
     def __init__(self,screen,amp=0,rad=0,angle=0,centerx=0,centery=0,radius=10,width=0,max_speed = 20,color=(0,0,0)):
         Velocity.__init__(self,amp,rad,angle,max_speed)
         self.ball_color = color
-        self.ball_acc   = Velocity(0.2,angle=90) # 小球加速度
+        self.ball_acc   = Velocity(0.1,angle=90) # 小球加速度
         self.centerx    = centerx
         self.centery    = centery
         self.radius     = radius
