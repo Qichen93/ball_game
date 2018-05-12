@@ -3,12 +3,12 @@ import math
 import pygame
 
 class Ball(Velocity):
-    def __init__(self,screen,amp=0,rad=0,angle=0,centerx=0,centery=0,radius=10,width=0,max_speed = 20,color=(0,0,0)):
+    def __init__(self,screen,amp=0,rad=0,angle=0,pos=(0,0),radius=10,width=0,max_speed = 20,color=(0,0,0)):
         Velocity.__init__(self,amp,rad,angle,max_speed)
         self.ball_color = color
         self.ball_acc   = Velocity(0.1,angle=90) # 小球加速度
-        self.centerx    = centerx
-        self.centery    = centery
+        self.centerx    = pos[0]
+        self.centery    = pos[1]
         self.radius     = radius
         self.width      = width
         self.screen     = screen
@@ -45,6 +45,7 @@ class Ball(Velocity):
         self.centerx+=x_v
         self.centery+=y_v
         #print('小球坐标为{{{},{}}}'.format(self.centerx,self.centery))
+
     def ball_demo(self,screen_width,screen_height):
         self.draw_ball()
         x_pos = self.ball_pos_get()[0]
@@ -58,20 +59,10 @@ class Ball(Velocity):
                 self.velocity_loss(1)
         if y_pos<0 or y_pos>screen_height :
             self.velocity_reflect(math.radians(270))
-            #self.ball_pos_update()
-            '''
-                此处出现设计失误，原始程序在球体反弹过程中检测若球体坐标超出范围则直接将其
-                对齐范围，且速度取反射后的速度，但是这样会造成一部分能量泄露，所以需要采用
-                的标准方式是，当检测到球体坐标超出范围内，需要将其超出范围部分的位移关于边
-                界进行对称，这样就可以避免能量丢失。
-                在最大速度限制设置时，应该满足一定要求，或者不设，因为速度最大值可能导致一
-                部分能量在速度到达最大值后丢失。
-            '''
             if y_pos<0 :
                 self.ball_pos_set((x_pos,-y_pos))
             else :
                 self.ball_pos_set((x_pos,screen_height-(y_pos-screen_height)))
                 self.velocity_loss(1)
-                #print('当前小球速度为{{x_v={0[0]},y_v={0[1]}}}'.format(self.velocity_decompose()))
         self.ball_pos_update()
         
