@@ -6,7 +6,7 @@ class Ball(Velocity):
     def __init__(self,screen,amp=0,rad=0,angle=0,pos=(0,0),radius=10,width=0,max_speed = 20,color=(0,0,0)):
         Velocity.__init__(self,amp,rad,angle,max_speed)
         self.ball_color = color
-        self.ball_acc   = Velocity(0.1,angle=90) # 小球加速度
+        self.ball_acc   = Velocity(0.3,angle=90) # 小球加速度
         self.centerx    = pos[0]
         self.centery    = pos[1]
         self.radius     = radius
@@ -63,6 +63,8 @@ class Ball(Velocity):
                 self.ball_pos_set((x_pos,-y_pos))
             else :
                 self.ball_pos_set((x_pos,screen_height-(y_pos-screen_height)))
-                self.velocity_loss(1)
+                self.velocity_loss(0)
+                return True
         self.ball_pos_update()
+        return False
         
