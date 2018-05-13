@@ -14,7 +14,7 @@ class Shotline():
         self.length     = 20                if kwargs.get('length')    == None else kwargs.get('length')          # 每两个圆圆心间距
         self.pn         = 7                 if kwargs.get('pn')        == None else kwargs.get('pn')           # 组成瞄准线的圆形点数
         self.color      = (0,0,0)           if kwargs.get('color')     == None else kwargs.get('color')
-        self.radius     = 5                 if kwargs.get('radius')    == None else kwargs.get('radius')       # 圆圈半径
+        self.radius     = 4                 if kwargs.get('radius')    == None else kwargs.get('radius')       # 圆圈半径
         self.angle_max  = math.radians(170.1)if kwargs.get('angle_max') == None else kwargs.get('angle_max') 
         self.angle_min  = math.radians(10.1)if kwargs.get('angle_min') == None else kwargs.get('angle_min')   
         self.angle_div  = math.radians(5)   if kwargs.get('angle_div') == None else kwargs.get('angle_div') 

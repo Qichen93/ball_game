@@ -10,35 +10,30 @@ from rectangle_block import Rectangle_block
 from circle_block    import Circle_block
 from shotline        import Shotline
 from game_functions  import *
+from game_controller import Game_controller
 
 def run_game():
     pygame.init()
     pygame.display.set_caption("Ball Game")
-    bg_color        = (230,230,230)
-    screen_width    = 400
-    screen_height   = 640
-    screen          = pygame.display.set_mode((screen_width,screen_height))
+    game_ctrl       = Game_controller()
+    bg_color        = game_ctrl.bg_color     
+    screen_width    = game_ctrl.screen_width 
+    screen_height   = game_ctrl.screen_height
+    screen          = game_ctrl.screen
     shotline        = Shotline(screen,(screen_width/2,0))
-    block_list      = []
-    ball_list       = []
+    game_ctrl       = Game_controller()
+    block_list      = game_ctrl.block_list
+    ball_list       = game_ctrl.ball_list
     frame_cnt       = 0
     
-    for i in range(0,5):
-        block_class_type = choice([(Circle_block,2),(Rectangle_block,1)])
-        block_list.append(block_class_type[0](screen,(randint(0,screen_width),randint(0,screen_height)),int(70/block_class_type[1]),20,color=(randint(0,255),randint(0,255),randint(0,255))))
-
-    
     #测试期间初始化小球不应该与方块重合，直接将重合小球消除
-    
-    for block in block_list:
-        for ball in ball_list:
-            if block.hit_check(ball.ball_pos_get()) :
-                ball_list.remove(ball)
     
     while True:
         start_time = time.time()
         #必须要获取输入，否则会卡死
-        event_process(shotline)
+        event_process(game_ctrl,shotline)
+        check_send_ready(game_ctrl,ball_list)
+        block_gen(game_ctrl,block_list)
         shot_ball(screen,shotline,ball_list)
         screen.fill(bg_color)
         for ball in ball_list :
@@ -48,6 +43,7 @@ def run_game():
             # 如果与小球发生碰撞
             for block in block_list:
                 if block.hit_check(ball.ball_pos_get()) :
+                    game_ctrl.score += 1
                     point = block.intersect_point_get(ball.rad,ball.ball_pos_get())
                     ball.velocity_reflect(point[2])
         for block in block_list:   
@@ -55,8 +51,11 @@ def run_game():
             if block.num <= 0 :
                 block_list.remove(block)
         shotline.draw_shotline()
+        draw_guide(game_ctrl,screen)
+        game_logic_ctrl(game_ctrl)
+        failure_check(game_ctrl)
         pygame.display.flip()
-        time.sleep(0.02)
+        time.sleep(1/game_ctrl.frame_rate_ctrl)
         time_interval = time.time() - start_time
         frame_cnt += 1
         if frame_cnt > 100 :

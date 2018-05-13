@@ -8,8 +8,9 @@ class Circle_block(Block):
         self.param_init()
     
     def param_init(self):
-        self.radius = self.size
+        self.radius = int(self.size/2)
         self.pos    = (self.centerx,self.centery)
+        #print('circle_para_init_called,{}',self.pos)
         
     def draw_block(self):
         ''' 将图形绘制在屏幕上 

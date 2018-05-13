@@ -23,6 +23,7 @@ class Rectangle_block(Block):
         pygame.draw.rect(self.screen,self.color,self.block_rect,0)
         # 绘制num数到方块上
         self.draw_num()     
+            
     
     def intersect_point_get(self,rad,pos):
         '''
